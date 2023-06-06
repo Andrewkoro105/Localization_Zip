@@ -33,12 +33,12 @@ bool read(std::filesystem::path path, std::u32string& files){
             zip_stat_index(zipFile, i, 0, &st);
             std::string fileName{st.name};
             if (fileName.erase(0, fileName.size() - 4) == ".loc"){
-                char * text = new char [st.size];
-
+                char * text = new char [st.size - 1];
+				
                 zip_file_t* fileInZip = zip_fopen_index(zipFile, i, 0);
-                zip_fread(fileInZip, text, st.size);
+                zip_fread(fileInZip, text, st.size - 1);
                 zip_fclose(fileInZip);
-
+				
                 files += to_utf32(std::string{text}) + U'\n';
             }
 
