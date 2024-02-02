@@ -1,27 +1,11 @@
 #include "zipRead.hpp"
 #include "zip.h"
+#include <option_result/option_result.hpp>
 
-#if _MSC_VER >= 1900
-
-std::u32string to_utf32(std::string const & s)
-{
-    std::wstring_convert<std::codecvt_utf8<int32_t>, int32_t> convert;
-    auto asInt = convert.from_bytes(s);
-    return std::u32string(reinterpret_cast<char32_t const *>(asInt.data()), asInt.length());
-}
-
-#else
-
-std::u32string to_utf32(std::string s){
-    std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> conv{};
-    return conv.from_bytes(s);
-}
-
-#endif
-
-bool read(std::filesystem::path path, std::u32string& files){
+orl::Option<std::string> read(std::filesystem::path path){
     std::string strPath{path.string()};
     if (strPath.erase(0, strPath.size() - 8) == ".loc.zip"){
+		std::string result;
         int err = 0;
         zip *zipFile = zip_open(path.c_str(), 0, &err);
 
@@ -39,12 +23,12 @@ bool read(std::filesystem::path path, std::u32string& files){
                 zip_fread(fileInZip, text, st.size - 1);
                 zip_fclose(fileInZip);
 				
-                files += to_utf32(std::string{text}) + U'\n';
+                result += std::string{text} + '\n';
             }
 
         }
 
-        return true;
+        return result;
     }
-    return false;
+    return {};
 }
