@@ -4,5 +4,5 @@
 #include <filesystem>
 
 extern "C" {
-bool read(std::filesystem::path path, std::u32string &files);
+std::string read(std::filesystem::path path);
 }

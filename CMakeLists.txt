@@ -12,15 +12,8 @@ FetchContent_Declare(
         FIND_PACKAGE_ARGS NAMES zip
 )
 
-FetchContent_Declare(
-		option_result_cpp
-		GIT_REPOSITORY https://github.com/Hedgehogo/option-result-cpp.git
-		GIT_TAG        main
-		FIND_PACKAGE_ARGS NAMES option_result_cpp
-)
-
-FetchContent_MakeAvailable(zip option_result_cpp)
+FetchContent_MakeAvailable(zip)
 
 add_library(${PROJECT_NAME} MODULE lib/zip/zipRead.cpp lib/zip/zipRead.hpp)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC zip option_result_cpp)
+target_link_libraries(${PROJECT_NAME} PUBLIC zip)
